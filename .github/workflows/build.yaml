@@ -1,0 +1,62 @@
+name: CI Build & Test
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - docs/**
+      - "**.md"
+      - .github/workflows/docs-website.yaml
+      - .github/workflows/validations.yaml
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
+    paths-ignore:
+      - docs/**
+      - "**.md"
+      - .github/workflows/docs-website.yaml
+      - .github/workflows/validations.yaml
+
+permissions:
+  contents: read
+
+jobs:
+  build-test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      # Installs the Zig version pinned in mise.toml (0.16.0).
+      # mise-action caches the installed tools, keyed on mise.toml.
+      - name: Setup toolchain
+        uses: jdx/mise-action@v2
+        with:
+          cache: true
+
+      # Caches the Zig global cache (fetched packages) and the local
+      # build cache, so unchanged sources don't recompile from scratch.
+      - name: Cache Zig build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/zig
+            .zig-cache
+          key: ${{ runner.os }}-zig-${{ hashFiles('build.zig.zon', 'build.zig') }}-${{ hashFiles('src/**/*.zig') }}
+          restore-keys: |
+            ${{ runner.os }}-zig-${{ hashFiles('build.zig.zon', 'build.zig') }}-
+            ${{ runner.os }}-zig-
+
+      - name: Check formatting
+        run: zig fmt --check .
+
+      - name: Build
+        run: zig build
+
+      - name: Test
+        run: zig build test
