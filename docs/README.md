@@ -8,6 +8,7 @@ config:
       name: 🌰 Granary
       text: Raft consensus in Zig
       tagline: A replicated key-value store built by implementing Raft straight from the paper.
+      image: /logo.png
       actions:
         - text: Get Started →
           link: /guide/getting-started
