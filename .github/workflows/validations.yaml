@@ -1,0 +1,66 @@
+name: Quality Validations
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    tags:
+      - "*"
+    paths:
+      - .github/workflows/validations.yaml
+      - "**/*.yml"
+      - "**/*.yaml"
+      - "**/*.md"
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
+    paths:
+      - .github/workflows/validations.yaml
+      - "**/*.yml"
+      - "**/*.yaml"
+      - "**/*.md"
+
+permissions:
+  contents: read
+
+jobs:
+  md:
+    name: Markdown
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout code
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      # Installs the linters pinned in mise.toml.
+      # mise-action caches the installed tools, keyed on mise.toml.
+      - name: Setup toolchain
+        uses: jdx/mise-action@v2
+        with:
+          cache: true
+
+      - name: Lint Markdown
+        run: markdownlint-cli2 "**/*.md"
+
+  yaml:
+    name: YAML
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout code
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      # Installs the linters pinned in mise.toml.
+      # mise-action caches the installed tools, keyed on mise.toml.
+      - name: Setup toolchain
+        uses: jdx/mise-action@v2
+        with:
+          cache: true
+
+      - name: Lint YAML
+        continue-on-error: true
+        run: yamllint -f standard .

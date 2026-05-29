@@ -1,0 +1,56 @@
+# Raft log: command types, payloads, entries, in-memory log, WAL wire format
+log:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/log/**'
+
+# Key-value state machine
+state:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/state/**'
+
+# Transport interface and RPC message types
+transport:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/transport/**'
+
+# RaftNode: election, replication, the tick loop
+node:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/node/**'
+
+# Test helpers, including the in-memory transport
+testing:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/testing/**'
+
+# Documentation (Markdown files or docs folders)
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'docs/**'
+          - '**/*.md'
+
+# Build system and toolchain
+build:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'build.zig'
+          - 'build.zig.zon'
+          - 'mise.toml'
+          - '.github/**'
+
+# Add 'enhancement' label to any PR where the head branch name starts with `feature`
+enhancement:
+  - head-branch:
+      - '^feature'
+
+# Add 'bug' label to any PR where the head branch name starts with `bug` or `fix`
+bug:
+  - head-branch:
+      - '^bug'
+      - '^fix'
