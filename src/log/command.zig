@@ -151,7 +151,7 @@ pub const Command = union(CommandTag) {
 
     /// Serialize to wire format.
     pub fn serialize(self: Command, writer: *std.Io.Writer) std.Io.Writer.Error!void {
-        try writer.writeInt(u8, @intFromEnum(self), .little);
+        try writer.writeInt(u8, @backingInt(self), .little);
         switch (self) {
             .set => |set| try set.serialize(writer),
             .delete => |del| try del.serialize(writer),

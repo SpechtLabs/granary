@@ -100,7 +100,7 @@ Log entries serialize to a compact binary format with a per-file header and per-
 
 ### Requirements
 
-- Zig `0.16.0`, the version `.mise.toml` pins (`minimum_zig_version` in `build.zig.zon` is the oldest it supports)
+- Zig `0.17.0`, the version `.mise.toml` pins (`minimum_zig_version` in `build.zig.zon` is the oldest it supports)
 
 If you use [mise](https://mise.jdx.dev/), `.mise.toml` declares the toolchain and the linters:
 
