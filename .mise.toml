@@ -1,0 +1,89 @@
+# .mise.toml — local tooling, exact pins (repo convention)
+#
+# The tasks below define how Granary is built and checked. CI uses these
+# tasks, so a green `mise run check` locally is a green pipeline. Renovate
+# keeps every pin in this file current.
+
+[settings]
+# The pins below are the only source of tool versions; mise never reads them
+# from .nvmrc, .python-version and friends.
+idiomatic_version_file_enable_tools = []
+
+[tools]
+# Keep at or above .minimum_zig_version in build.zig.zon, which is the oldest
+# Zig the package supports and is bumped by hand.
+zig = "0.16.0"
+
+# Pre-commit for Git hooks
+pre-commit = "4.6.2"
+
+# Linters
+yamllint = "1.38.0"
+actionlint = "1.7.12"
+# actionlint runs shellcheck on every `run:` script when it's on PATH, and
+# silently skips them when it isn't.
+shellcheck = "0.11.0"
+
+# Pins GitHub Actions to commit SHAs (see the update-gha task)
+pinact = "5.0.0"
+
+# Documentation website (docs/): VuePress builds under bun, and markdownlint-cli2
+# is the same version the docs workflow runs. markdownlint-cli2 is an npm
+# package, which mise installs with the node pinned here.
+bun = "1.4.2"
+node = "24.21.0"
+markdownlint-cli2 = "0.23.3"
+
+[tasks.build]
+description = "Build the library and the granary executable into zig-out/"
+run = "zig build"
+
+[tasks.run]
+description = "Run the granary executable"
+run = "zig build run"
+
+[tasks.test]
+description = "Run the test suite"
+run = "zig build test --summary all"
+
+# `mise run fmt` rewrites what `mise run fmt-check` (part of lint) checks.
+[tasks.fmt]
+description = "Format the Zig sources and fix what markdownlint can fix"
+run = ["zig fmt build.zig build.zig.zon src", "markdownlint-cli2 --fix"]
+
+[tasks.fmt-check]
+description = "Check that the Zig sources are formatted"
+run = "zig fmt --check build.zig build.zig.zon src"
+
+[tasks.lint]
+description = "Check Zig formatting, and lint YAML and the GitHub Actions workflows"
+depends = ["fmt-check", "yaml-lint", "actionlint"]
+
+[tasks.yaml-lint]
+description = "Lint every YAML file in the repository"
+run = "yamllint --strict ."
+
+[tasks.actionlint]
+description = "Lint the GitHub Actions workflows"
+run = "actionlint"
+
+[tasks.check]
+description = "The definition of done: every gate CI runs on the Zig code"
+depends = ["lint", "build", "test"]
+
+[tasks.update-gha]
+description = "Pin GitHub Actions to commit SHAs (Renovate keeps them current afterwards)"
+run = "pinact run -e 'SpechtLabs/StaticPages-Upload'"
+
+# The markdownlint-cli2 config's globs cover the README and the docs.
+[tasks.docs-lint]
+description = "Lint the documentation markdown (the docs workflow's first job)"
+run = "markdownlint-cli2"
+
+[tasks.docs-dev]
+description = "Serve the documentation website locally with hot reload"
+run = "cd docs && bun install && bun run dev"
+
+[tasks.docs-build]
+description = "Build the documentation website (the docs workflow's second job)"
+run = "cd docs && bun install --frozen-lockfile && bun run build"

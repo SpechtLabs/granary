@@ -41,3 +41,6 @@ docgen_tmp/
 
 .claude/
 *.DS_Store
+
+# The commit message check's dependencies (see .github/commit-lint/)
+.github/commit-lint/node_modules/

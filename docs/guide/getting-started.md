@@ -6,9 +6,9 @@ createTime: 2026/05/29 00:00:00
 
 ## Requirements
 
-Granary needs Zig `0.16.0` or newer; the exact version is pinned in `minimum_zig_version` in `build.zig.zon`.
+Granary needs Zig `0.16.0`, the version `.mise.toml` pins; `minimum_zig_version` in `build.zig.zon` is the oldest it supports.
 
-If you use [mise](https://mise.jdx.dev/), the pinned toolchain is declared in `mise.toml`, so a single command gets you set up:
+If you use [mise](https://mise.jdx.dev/), `.mise.toml` declares the toolchain and the linters, so a single command gets you set up:
 
 ```sh
 mise install
@@ -20,6 +20,7 @@ mise install
 zig build          # compile
 zig build run      # run the executable
 zig build test     # run the full test suite (all modules)
+mise run check     # every gate CI runs: zig fmt --check, yamllint, actionlint, build, tests
 ```
 
 The test suite is the best way into the code. Election, replication, WAL replay, conflict truncation, and serialization round-trips each have focused tests in their own modules, so reading them tells you how every part is meant to behave.

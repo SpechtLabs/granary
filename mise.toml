@@ -1,6 +1,0 @@
-[tools]
-bun = "latest"
-zig = "0.16.0"
-uv = "latest"
-markdownlint-cli2 = "latest"
-yamllint = "latest"

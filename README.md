@@ -100,9 +100,9 @@ Log entries serialize to a compact binary format with a per-file header and per-
 
 ### Requirements
 
-- Zig `0.16.0` or newer (see `minimum_zig_version` in `build.zig.zon`)
+- Zig `0.16.0`, the version `.mise.toml` pins (`minimum_zig_version` in `build.zig.zon` is the oldest it supports)
 
-If you use [mise](https://mise.jdx.dev/), the pinned toolchain is declared in `mise.toml`:
+If you use [mise](https://mise.jdx.dev/), `.mise.toml` declares the toolchain and the linters:
 
 ```sh
 mise install
@@ -114,6 +114,7 @@ mise install
 zig build          # compile
 zig build run      # run the executable
 zig build test     # run the full test suite (all modules)
+mise run check     # every gate CI runs: zig fmt --check, yamllint, actionlint, build, tests
 ```
 
 The test suite is the best way into the code. Election, replication, WAL replay, conflict
