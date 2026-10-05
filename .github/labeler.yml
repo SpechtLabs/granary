@@ -35,21 +35,35 @@ documentation:
           - 'docs/**'
           - '**/*.md'
 
-# Build system and toolchain
+# The docs site's build: VuePress config, theme and dependencies
+docs-site:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'docs/.vuepress/**'
+          - 'docs/package.json'
+          - 'docs/bun.lock'
+
+# Build system, toolchain, and CI plumbing
 build:
   - changed-files:
       - any-glob-to-any-file:
           - 'build.zig'
           - 'build.zig.zon'
-          - 'mise.toml'
           - '.github/**'
+          - '.mise.toml'
+          - '.pre-commit-config.yaml'
+          - '.markdownlint-cli2.yaml'
+          - '.yamllint.yaml'
+          - '.editorconfig'
+          - 'renovate.json'
 
-# Add 'enhancement' label to any PR where the head branch name starts with `feature`
+# Add 'enhancement' to any PR whose head branch starts with `feat` or `feature`
 enhancement:
   - head-branch:
+      - '^feat'
       - '^feature'
 
-# Add 'bug' label to any PR where the head branch name starts with `bug` or `fix`
+# Add 'bug' to any PR whose head branch starts with `fix` or `bug`
 bug:
   - head-branch:
       - '^bug'
