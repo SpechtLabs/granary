@@ -25,7 +25,7 @@ actionlint = "1.7.12"
 shellcheck = "0.11.0"
 
 # Pins GitHub Actions to commit SHAs (see the update-gha task)
-pinact = "5.0.0"
+pinact = "5.0.1"
 
 # Documentation website (docs/): VuePress builds under bun, and markdownlint-cli2
 # is the same version the docs workflow runs. markdownlint-cli2 is an npm
